@@ -15,22 +15,24 @@ fetch('https://randomuser.me/api/?nat=us,gb&results=12')
 const grid = document.querySelector('.grid');
 
 function log(userData) {
-
+    var elementNum = 0;
     // for each user in userData, create a div and append all the data to it
     // also add event listener to this div and show a modal window on pop up
     userData.forEach(element => {
-        appendInfo(element);
+        appendInfo(element, elementNum);
+        elementNum++;
     })
 
     var cells = document.querySelectorAll('.cell');
     cells.forEach(element => {
-        element.addEventListener('click', e => showWindow(e.target));
+        element.addEventListener('click', showWindow);
     });
 }
 
-function appendInfo(data) {
+function appendInfo(data, elementNum) {
     let userCell = document.createElement("div");
     userCell.className = "cell";
+    userCell.setAttribute('data-id', elementNum)
 
     let userImg = document.createElement("img");
     userImg.src = data.picture.medium;
@@ -53,9 +55,15 @@ function appendInfo(data) {
     grid.appendChild(userCell).appendChild(fullName);
     grid.appendChild(userCell).appendChild(email);
     grid.appendChild(userCell).appendChild(cityName);;
+
+    var cells = document.querySelectorAll('.cell');
+    cells.forEach(element => {
+        element.addEventListener('click', showWindow);
+    });
 }
 
 // Modal Window
+var close = document.getElementById('close');
 var modal = document.getElementById('myModal');
 var modalContent = document.getElementsByClassName('modal-content')[0];
 var blocks = document.getElementsByClassName('cell');
@@ -70,31 +78,36 @@ const fullLocation = document.getElementById('location');
 const dob = document.getElementById('dob');
 const user = document.getElementById('username');
 
+close.addEventListener('click', () => {
+    modal.style.display = "none";
+});
+
 function showWindow(e) {
 
     modal.style.display = "block";
 
     // get block index
-    currentUser = nodeIndex(e);
+    console.log(this.dataset.id);
+    currentUser = parseInt(this.dataset.id);
 
-    profilePic.src = userData[nodeIndex(e)].picture.medium;
+    profilePic.src = userData[currentUser].picture.medium;
 
     // append name with capitalized letters in first and last name
-    name.innerHTML = userData[nodeIndex(e)].name.first[0].toUpperCase() + userData[nodeIndex(e)].name.first.substring(1) 
+    name.innerHTML = userData[currentUser].name.first[0].toUpperCase() + userData[currentUser].name.first.substring(1) 
     + " " + 
-    userData[nodeIndex(e)].name.last[0].toUpperCase() + userData[nodeIndex(e)].name.last.substring(1);
+    userData[currentUser].name.last[0].toUpperCase() + userData[currentUser].name.last.substring(1);
 
-    email.innerHTML = userData[nodeIndex(e)].email;
+    email.innerHTML = userData[currentUser].email;
 
-    var locationData = userData[nodeIndex(e)].location;
+    var locationData = userData[currentUser].location;
     city.innerHTML = locationData.city;
 
-    phone.innerHTML = userData[nodeIndex(e)].phone;
-    user.innerHTML = userData[nodeIndex(e)].login.username;
+    phone.innerHTML = userData[currentUser].phone;
+    user.innerHTML = userData[currentUser].login.username;
 
     fullLocation.innerHTML = locationData.street + locationData.city + locationData.state + locationData.postcode;
 
-    dob.innerHTML = userData[nodeIndex(e)].dob.date;
+    dob.innerHTML = userData[currentUser].dob.date;
 }
 
 // check index of clicked div
@@ -180,16 +193,21 @@ right.addEventListener('click', () => {
 
 function showUser(num) {
     // clear content
+
+    currentUser = parseInt(currentUser);
+
     if(currentUser == 0 && num == -1)
     {
-        currentUser = blocks.length;
+        currentUser = blocks.length - 1;
     } 
-    else if (currentUser == blocks.length) 
+    else if (currentUser == (blocks.length - 1) && num == 1) 
     {
         currentUser = 0;
+    } else {
+        currentUser = currentUser + num;
     }
 
-    currentUser = currentUser + num;
+    console.log(currentUser);
 
     // get the previous user info
     profilePic.src = userData[currentUser].picture.medium;
