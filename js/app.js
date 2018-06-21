@@ -12,23 +12,26 @@ fetch('https://randomuser.me/api/?nat=us,gb&results=12')
         console.log(error);
 });
 
+// get the grid div
 const grid = document.querySelector('.grid');
 
+// function to take the userData object
 function log(userData) {
     var elementNum = 0;
     // for each user in userData, create a div and append all the data to it
-    // also add event listener to this div and show a modal window on pop up
     userData.forEach(element => {
         appendInfo(element, elementNum);
         elementNum++;
     })
 
+    // also add event listener to this div and show a modal window on pop up
     var cells = document.querySelectorAll('.cell');
     cells.forEach(element => {
         element.addEventListener('click', showWindow);
     });
 }
 
+// append the data to a new div
 function appendInfo(data, elementNum) {
     let userCell = document.createElement("div");
     userCell.className = "cell";
@@ -70,6 +73,7 @@ var modalContent = document.getElementsByClassName('modal-content')[0];
 var blocks = document.getElementsByClassName('cell');
 var currentUser;
 
+// Modal window texts
 const profilePic = document.getElementById('profilePic');
 const name = document.getElementById('name');
 const city = document.getElementById('city');
@@ -79,10 +83,12 @@ const fullLocation = document.getElementById('location');
 const dob = document.getElementById('dob');
 const user = document.getElementById('username');
 
+// Close modal window
 close.addEventListener('click', () => {
     modal.style.display = "none";
 });
 
+// show modal window when employee is clicked
 function showWindow(e) {
 
     modal.style.display = "block";
@@ -108,7 +114,7 @@ function showWindow(e) {
 
     fullLocation.innerHTML = locationData.street + locationData.city + locationData.state + locationData.postcode;
 
-    dob.innerHTML = "Birthday: " + userData[currentUser].dob.date;
+    dob.innerHTML = "Birthday: " + userData[currentUser].dob.date.substring(0,10).replace(/-/g,'/');
 }
 
 // check index of clicked div
@@ -224,7 +230,7 @@ function showUser(num) {
     city.innerHTML = locationData.city;
 
     phone.innerHTML = userData[currentUser].phone;
-    user.innerHTML = userData[currentUser].username;
+    user.innerHTML = userData[currentUser].login.username;
 
     fullLocation.innerHTML = locationData.street + locationData.city + locationData.state + locationData.postcode;
 
