@@ -37,19 +37,20 @@ function appendInfo(data, elementNum) {
     let userImg = document.createElement("img");
     userImg.src = data.picture.medium;
 
-    let info = document.createElement('div');
-
     // append name with capitalized letters in first and last name
     let fullName = document.createElement("h2");
     fullName.innerHTML = data.name.first[0].toUpperCase() + data.name.first.substring(1) 
         + " " + 
         data.name.last[0].toUpperCase() + data.name.last.substring(1);
+    fullName.setAttribute('class', 'fullName');
 
     let email = document.createElement("p");
     email.innerHTML = data.email;
+    email.setAttribute('class', 'cardText');
 
     let cityName = document.createElement("p");
     cityName.innerHTML = data.location.city[0].toUpperCase() + data.location.city.substring(1);
+    cityName.setAttribute('class', 'cardText');
 
     grid.appendChild(userCell).appendChild(userImg);
     grid.appendChild(userCell).appendChild(fullName);
@@ -107,7 +108,7 @@ function showWindow(e) {
 
     fullLocation.innerHTML = locationData.street + locationData.city + locationData.state + locationData.postcode;
 
-    dob.innerHTML = userData[currentUser].dob.date;
+    dob.innerHTML = "Birthday: " + userData[currentUser].dob.date;
 }
 
 // check index of clicked div
